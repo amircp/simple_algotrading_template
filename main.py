@@ -23,7 +23,9 @@ binance = ccxt.binance({
 })
 
 TIME_FRAME = "15m"
+TIME_FRAME_TO_UPDATE_FEED = 15 #15 MINUTES, please change this value with the method for the Scheduler
 SYMBOL = "BTC/USDT"
+
 
 bot_token = os.environ.get('BOT_PIVOT_TOKEN')
 chat_id = os.environ.get('PIVOT_CHAT_ID')
@@ -87,7 +89,8 @@ def main():
                 os.remove(image_path)
 
     analyze_asset()
-    schedule.every(1).minutes.do(analyze_asset)
+    # Every TIME_FRAME_TO_UPDATE_FEED we are going to update the data feed and re-analyze it with our strategy
+    schedule.every(TIME_FRAME_TO_UPDATE_FEED).minutes.do(analyze_asset)
 
     while True:
         schedule.run_pending()
